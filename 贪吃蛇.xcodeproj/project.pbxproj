@@ -14,6 +14,12 @@
 		BB2CB45E21F014E300244624 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB2CB45C21F014E300244624 /* LaunchScreen.storyboard */; };
 		BB2CB46921F014E300244624 /* ___Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2CB46821F014E300244624 /* ___Tests.swift */; };
 		BB2CB47421F014E300244624 /* ___UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2CB47321F014E300244624 /* ___UITests.swift */; };
+		BB2CB48221F0150300244624 /* SnakeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2CB48121F0150300244624 /* SnakeView.swift */; };
+		BB2CB48721F2E53C00244624 /* shangbian.png in Resources */ = {isa = PBXBuildFile; fileRef = BB2CB48321F2E53B00244624 /* shangbian.png */; };
+		BB2CB48821F2E53C00244624 /* youbian.png in Resources */ = {isa = PBXBuildFile; fileRef = BB2CB48421F2E53B00244624 /* youbian.png */; };
+		BB2CB48921F2E53C00244624 /* xiabian.png in Resources */ = {isa = PBXBuildFile; fileRef = BB2CB48521F2E53C00244624 /* xiabian.png */; };
+		BB2CB48A21F2E53C00244624 /* zuobian.png in Resources */ = {isa = PBXBuildFile; fileRef = BB2CB48621F2E53C00244624 /* zuobian.png */; };
+		BB65266D221D5225008BFD58 /* apple.jpg in Resources */ = {isa = PBXBuildFile; fileRef = BB65266C221D5224008BFD58 /* apple.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +53,12 @@
 		BB2CB46F21F014E300244624 /* 贪吃蛇UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "贪吃蛇UITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB2CB47321F014E300244624 /* ___UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "___UITests.swift"; sourceTree = "<group>"; };
 		BB2CB47521F014E300244624 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB2CB48121F0150300244624 /* SnakeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakeView.swift; sourceTree = "<group>"; };
+		BB2CB48321F2E53B00244624 /* shangbian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shangbian.png; sourceTree = "<group>"; };
+		BB2CB48421F2E53B00244624 /* youbian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = youbian.png; sourceTree = "<group>"; };
+		BB2CB48521F2E53C00244624 /* xiabian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = xiabian.png; sourceTree = "<group>"; };
+		BB2CB48621F2E53C00244624 /* zuobian.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = zuobian.png; sourceTree = "<group>"; };
+		BB65266C221D5224008BFD58 /* apple.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = apple.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +111,12 @@
 			children = (
 				BB2CB45321F014E200244624 /* AppDelegate.swift */,
 				BB2CB45521F014E200244624 /* ViewController.swift */,
+				BB2CB48121F0150300244624 /* SnakeView.swift */,
+				BB2CB48321F2E53B00244624 /* shangbian.png */,
+				BB2CB48521F2E53C00244624 /* xiabian.png */,
+				BB2CB48421F2E53B00244624 /* youbian.png */,
+				BB2CB48621F2E53C00244624 /* zuobian.png */,
+				BB65266C221D5224008BFD58 /* apple.jpg */,
 				BB2CB45721F014E200244624 /* Main.storyboard */,
 				BB2CB45A21F014E300244624 /* Assets.xcassets */,
 				BB2CB45C21F014E300244624 /* LaunchScreen.storyboard */,
@@ -231,7 +249,12 @@
 			files = (
 				BB2CB45E21F014E300244624 /* LaunchScreen.storyboard in Resources */,
 				BB2CB45B21F014E300244624 /* Assets.xcassets in Resources */,
+				BB65266D221D5225008BFD58 /* apple.jpg in Resources */,
+				BB2CB48921F2E53C00244624 /* xiabian.png in Resources */,
+				BB2CB48A21F2E53C00244624 /* zuobian.png in Resources */,
+				BB2CB48821F2E53C00244624 /* youbian.png in Resources */,
 				BB2CB45921F014E200244624 /* Main.storyboard in Resources */,
+				BB2CB48721F2E53C00244624 /* shangbian.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +281,7 @@
 			files = (
 				BB2CB45621F014E200244624 /* ViewController.swift in Sources */,
 				BB2CB45421F014E200244624 /* AppDelegate.swift in Sources */,
+				BB2CB48221F0150300244624 /* SnakeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,12 +457,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J5E8U6K8X2;
 				INFOPLIST_FILE = "贪吃蛇/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "file.---";
+				PRODUCT_BUNDLE_IDENTIFIER = greedsnake;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -450,12 +476,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J5E8U6K8X2;
 				INFOPLIST_FILE = "贪吃蛇/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "file.---";
+				PRODUCT_BUNDLE_IDENTIFIER = greedsnake;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
