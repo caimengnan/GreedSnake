@@ -46,7 +46,7 @@ let eachPointWidth:CGFloat = 10.0
 //单位长度的一半
 let halfEachPointWidth:CGFloat = eachPointWidth/2
 //游动的时间
-let timeSpace:TimeInterval = 0.2
+let timeSpace:TimeInterval = 0.3
 
 class SnakeView: UIView {
 
@@ -161,9 +161,12 @@ class SnakeView: UIView {
     ///蛇是否吃到食物
     func snakeEatFood() {
         if point.center == breakPointArray.last {
-            //创建随机点
+            //吃到食物，创建随机点
             createRandomPoint()
+            //添加音效
+            MusicContrl.shared.eatFood()
         } else {
+            //没吃到食物，继续
             breakPointArray.remove(at: 0)
         }
     }
@@ -247,9 +250,10 @@ class SnakeView: UIView {
         timer.fireDate = NSDate.init() as Date
         timer.fireDate = Date.distantPast
     }
+    //食物
     lazy var point:UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "apple.jpg"))
-        imageView.frame = CGRect(x: 0, y: 0, width: 15, height: 15)
+        imageView.frame = CGRect(x: 0, y: 0, width: 10, height: 10)
         return imageView
     }()
     
@@ -309,7 +313,6 @@ extension SnakeView {
         let random_y = arc4random() % UInt32(randomPool_height.count-1)
         randomPoint.x = CGFloat(randomPool_width[Int(random_x)])
         randomPoint.y = CGFloat(randomPool_height[Int(random_y)])
-        print("随机数为：\(randomPoint)")
         point.center = randomPoint
         point.isHidden = false
         

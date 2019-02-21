@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import AVFoundation
 
 let kSCreenWidth = UIScreen.main.bounds.size.width
 let kScreenHeight = UIScreen.main.bounds.size.height
 
 class ViewController: UIViewController {
-
+    var playerItem: AVPlayerItem?
+    var player: AVPlayer?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
@@ -29,9 +31,9 @@ class ViewController: UIViewController {
         
         self.rightBtn.frame = CGRect(x: kSCreenWidth/2 + height, y: upBtn.frame.maxY, width: height, height: width)
         
-        self.resetBtn.frame = CGRect(x: rightBtn.frame.minX, y: self.downBtn.frame.maxY + 50, width: height*2, height: width)
+        self.resetBtn.frame = CGRect(x: rightBtn.frame.minX, y: self.downBtn.frame.maxY + 30, width: height*2, height: width)
         
-        self.startBtn.frame = CGRect(x: leftBtn.frame.maxX - height * 2, y: self.downBtn.frame.maxY + 50, width: height*2, height: width)
+        self.startBtn.frame = CGRect(x: leftBtn.frame.maxX - height * 2, y: self.downBtn.frame.maxY + 30, width: height*2, height: width)
         
         self.view.addSubview(upBtn)
         self.view.addSubview(downBtn)
@@ -40,6 +42,23 @@ class ViewController: UIViewController {
         self.view.addSubview(resetBtn)
         self.view.addSubview(startBtn)
         
+        playBGM()
+        NotificationCenter.default.addObserver(self, selector: #selector(playbackFinished), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
+    }
+    
+    //播放背景音乐
+    func playBGM() {
+        let path = Bundle.main.path(forResource: "bgm.mp3", ofType: nil)
+        let sourceUrl = URL(fileURLWithPath: path!)
+        playerItem = AVPlayerItem(url: sourceUrl)
+        player = AVPlayer(playerItem: playerItem)
+    }
+    @objc func playbackFinished() {
+        playBGM()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func moveChangeAction(sender:UIButton) {
@@ -47,19 +66,29 @@ class ViewController: UIViewController {
             sender.isSelected = !sender.isSelected
             if sender.isSelected {
                 snakeView.startAction()
+                //打开背景音
+                player?.play()
             } else {
                 snakeView.stopAction()
+                //关闭背景音
+                player?.pause()
             }
         } else if sender.tag == 5 {
             snakeView.resetAction()
             startBtn.isSelected = false
         } else {
             snakeView.actionType = MoveDirectionType.typeFromString(tag: sender.tag)
+            //添加音效
+            MusicContrl.shared.changeDiretion()
         }
     }
     
     
     func showAlert() {
+        //关闭背景音
+        player?.pause()
+        //添加死亡音效
+        MusicContrl.shared.gameOver()
         let alertVC = UIAlertController(title: "提示", message:"哈哈，你死啦😝", preferredStyle: .alert)
         let sureAction = UIAlertAction(title: "重试", style: .cancel) { (action) in
             self.snakeView.resetAction()
@@ -70,18 +99,17 @@ class ViewController: UIViewController {
     
     
     lazy var snakeView:SnakeView = {
-        let snakeView = SnakeView(frame: CGRect(x: 10, y: 20, width: kSCreenWidth - 20, height: kSCreenWidth - 20))
+        let snakeView = SnakeView(frame: CGRect(x: 50, y: 40, width: kSCreenWidth - 100, height: kSCreenWidth - 100))
         snakeView.layer.cornerRadius = 4.0
         snakeView.layer.borderWidth = 1.0
-        snakeView.layer.borderColor = UIColor.red.cgColor
-        snakeView.backgroundColor = UIColor.green.withAlphaComponent(0.2)
+        snakeView.layer.borderColor = UIColor.yellow.cgColor
+        snakeView.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         
         snakeView.callBack = { [weak self] in
             self?.snakeView.stopAction()
             self?.startBtn.isSelected = false
             self?.showAlert()
         }
-        
         return snakeView
     }()
     
