@@ -45,22 +45,20 @@ extension MoveDirectionType {
 let eachPointWidth:CGFloat = 10.0
 //单位长度的一半
 let halfEachPointWidth:CGFloat = eachPointWidth/2
-//游动的时间
-let timeSpace:TimeInterval = 0.3
 
 class SnakeView: UIView {
-
     //死亡回调
     var callBack:(()->())?
-    
     //初始值
     var actionType = MoveDirectionType.RIGHT
     var randomPoint = CGPoint.zero
     var eatOrNot = false
     var isDead = false
     
-    //蛇的颜色
+    //蛇身的颜色
     let snakeColor = UIColor.red
+    //蛇头的颜色
+    let snakeHeadColor = UIColor.black
     //初始位置
     var point1 = CGPoint(x: 195.0, y: 165.0)
     var point2 = CGPoint(x: 205.0, y: 165.0)
@@ -70,6 +68,10 @@ class SnakeView: UIView {
     var breakPointArray = [CGPoint]()
     //记录方向改变之前的值
     var forwardDierct = MoveDirectionType.RIGHT
+    //计分
+    var delegate:ScoreAndSpeedProtocol?
+    //记速
+    var moveSpeed = Speed.shared
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -95,8 +97,46 @@ class SnakeView: UIView {
     //画蛇
     func drawSnake() {
         for i in 0..<breakPointArray.count {
-            findfourPointsAndconnect(centerPoint: breakPointArray[i])
+            if breakPointArray[i] == breakPointArray.last {
+                //头
+                snakeHead(center: breakPointArray[i])
+            }
+            else {
+                //身
+                findfourPointsAndconnect(centerPoint: breakPointArray[i])
+            }
         }
+    }
+    
+    //画蛇头
+    func snakeHead(center:CGPoint){
+        snakeColor.set()
+        let path = UIBezierPath()
+        //起始点
+        var startAngle:CGFloat = 0
+        //结束点
+        var endAngle:CGFloat = 0
+        switch actionType {
+        case .RIGHT:
+            startAngle = CGFloat.pi * 11 / 6
+            endAngle = CGFloat.pi / 6
+        case .LEFT:
+            startAngle = CGFloat.pi * 5 / 6
+            endAngle = CGFloat.pi * 7 / 6
+        case .UP:
+            startAngle = CGFloat.pi * 4 / 3
+            endAngle = CGFloat.pi * 5 / 3
+        case .DOWN:
+            startAngle = CGFloat.pi / 3
+            endAngle = CGFloat.pi * 2 / 3
+        default:
+            break
+        }
+        path.addArc(withCenter: center, radius: 5.0, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+        path.addLine(to: center)
+        path.lineWidth = 1.0
+        path.close()
+        path.fill()
     }
     
     ///滑动
@@ -165,6 +205,9 @@ class SnakeView: UIView {
             createRandomPoint()
             //添加音效
             MusicContrl.shared.eatFood()
+            //添加积分
+            let score = Score.shared.changeScore()
+            delegate?.addScore(score)
         } else {
             //没吃到食物，继续
             breakPointArray.remove(at: 0)
@@ -176,17 +219,16 @@ class SnakeView: UIView {
     func findfourPointsAndconnect(centerPoint:CGPoint) {
         snakeColor.set()
         let path = UIBezierPath()
-        path.move(to: CGPoint(x: centerPoint.x - halfEachPointWidth, y: centerPoint.y - halfEachPointWidth))
-        path.addLine(to: CGPoint(x: centerPoint.x + halfEachPointWidth, y: centerPoint.y - halfEachPointWidth))
-        path.addLine(to: CGPoint(x: centerPoint.x + halfEachPointWidth, y: centerPoint.y + halfEachPointWidth))
-        path.addLine(to: CGPoint(x: centerPoint.x - halfEachPointWidth, y: centerPoint.y + halfEachPointWidth))
+        path.addArc(withCenter: centerPoint, radius: halfEachPointWidth, startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true)
         path.lineWidth = 1.0
         path.fill()
     }
     
     ///开始
     func startAction() {
-        timer = Timer.scheduledTimer(timeInterval: timeSpace, target: self, selector: #selector(snakeAction), userInfo: nil, repeats: true)
+        timer.invalidate()
+        timer = Timer.scheduledTimer(timeInterval: TimeInterval(moveSpeed.initSpeed), target: self, selector: #selector(snakeAction), userInfo: nil, repeats: true)
+        print("当前速度：\(moveSpeed.initSpeed)")
         startTimer()
     }
     
@@ -209,6 +251,8 @@ class SnakeView: UIView {
         self.setNeedsDisplay()
         actionType = .RIGHT
         forwardDierct = .RIGHT
+        Speed.shared.initSpeed = 0.5
+        Score.shared.score = 0
     }
     
     ///方向操作
@@ -318,6 +362,7 @@ extension SnakeView {
         
     }
     
+    //是否撞到自己
     func containsDuplicate(_ nums:[CGPoint]) -> Bool {
         var newNums = nums
         for i in 0..<nums.count {
@@ -332,9 +377,8 @@ extension SnakeView {
         }
         return false
     }
-    
-    
 }
+
     
 
 

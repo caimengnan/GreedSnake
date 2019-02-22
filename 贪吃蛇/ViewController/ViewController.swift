@@ -15,10 +15,14 @@ let kScreenHeight = UIScreen.main.bounds.size.height
 class ViewController: UIViewController {
     var playerItem: AVPlayerItem?
     var player: AVPlayer?
+    //记速
+    var moveSpeed = Speed.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .black
         self.view.addSubview(snakeView)
+        self.view.addSubview(scoreView)
         
         let width:CGFloat = 50.0
         let height:CGFloat = 60.0
@@ -44,6 +48,8 @@ class ViewController: UIViewController {
         
         playBGM()
         NotificationCenter.default.addObserver(self, selector: #selector(playbackFinished), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: playerItem)
+        
+        moveSpeed.delegate = self
     }
     
     //播放背景音乐
@@ -92,6 +98,8 @@ class ViewController: UIViewController {
         let alertVC = UIAlertController(title: "提示", message:"哈哈，你死啦😝", preferredStyle: .alert)
         let sureAction = UIAlertAction(title: "重试", style: .cancel) { (action) in
             self.snakeView.resetAction()
+            self.scoreView.scoreLabel.text = "0"
+            self.scoreView.difficutyLabel.text = "1"
         }
         alertVC.addAction(sureAction)
         self.present(alertVC, animated: true, completion: nil)
@@ -99,12 +107,12 @@ class ViewController: UIViewController {
     
     
     lazy var snakeView:SnakeView = {
-        let snakeView = SnakeView(frame: CGRect(x: 50, y: 40, width: kSCreenWidth - 100, height: kSCreenWidth - 100))
+        let snakeView = SnakeView(frame: CGRect(x: 5, y: 40, width: kSCreenWidth*7/10, height: kSCreenWidth*7/10))
         snakeView.layer.cornerRadius = 4.0
         snakeView.layer.borderWidth = 1.0
         snakeView.layer.borderColor = UIColor.yellow.cgColor
         snakeView.backgroundColor = UIColor.white.withAlphaComponent(1.0)
-        
+        snakeView.delegate = self
         snakeView.callBack = { [weak self] in
             self?.snakeView.stopAction()
             self?.startBtn.isSelected = false
@@ -112,6 +120,14 @@ class ViewController: UIViewController {
         }
         return snakeView
     }()
+    
+    lazy var scoreView:ScoreView = {
+        let scoreView = ScoreView.loadScoreView()
+        scoreView.frame = CGRect(x: snakeView.frame.maxX + 5, y: snakeView.frame.minY, width: kSCreenWidth - snakeView.frame.maxX - 10, height: snakeView.frame.size.height)
+        scoreView.backgroundColor = .white
+        return scoreView
+    }()
+    
     
     lazy var leftBtn:UIButton = {
         let btn = UIButton(type: .custom)
@@ -167,5 +183,18 @@ class ViewController: UIViewController {
     }()
 
 
+}
+
+//添加积分的代理方法
+extension ViewController:ScoreAndSpeedProtocol {
+    func addScore(_ scroe: Int) {
+        scoreView.scoreLabel.text = "\(scroe)"
+    }
+    
+    func addSpeed() {
+        //加速度，加难度
+        snakeView.startAction()
+        scoreView.addDiffculty()
+    }
 }
 
